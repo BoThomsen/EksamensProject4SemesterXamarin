@@ -9,6 +9,7 @@ using PlantProject.Services;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+
 namespace PlantProject.ViewModels
 {
     public class PlantsViewModel : BaseViewModel
@@ -26,8 +27,6 @@ namespace PlantProject.ViewModels
             Title = "Plants";
             Plants = new ObservableCollection<Plant>();
 
-            //  LoadPlantsCommand = new Command(async () => await ExecuteLoadPlantCommand());
-
             LoadPlantsCommand = new Command(async () => await ExecuteLoadPlantCommand());
             PlantTapped = new Command<Plant>(OnPlantSelected);
 
@@ -36,52 +35,28 @@ namespace PlantProject.ViewModels
 
 
         }
-/*
-        public void getAllPlants()
-        {
-            Plants.Clear();
-
-            Plant pl = new Plant
-            {
-                PlantNo = "3",
-                Humidity = 44.5,
-                Temperature = 22.4,
-                SoilMoisture = "Dry",
-                Date = DateTime.Now
-            };
-
-
-
-            Plants.Add(pl);
-        }
-*/
-
         async Task ExecuteLoadPlantCommand()
         {
             IsBusy = true;
             try
             {
                 Plants.Clear();
-                //getting plants 
+                //getting all plants 
 
                     var httpResponse = await ConMiddleware.GetPlants();
-                    Console.WriteLine(httpResponse);
                     string responsePayload = await httpResponse.Content.ReadAsStringAsync();
 
                 //json to list 
                 var allPlants = JsonConvert.DeserializeObject<List<Plant>>(responsePayload);
 
-                Console.WriteLine(allPlants.Capacity);
-
+                //adding all data into observablelist
                 foreach (var plant in allPlants)
                {
                     Plant pl = new Plant();
-                    Console.WriteLine("hallo " + plant.PlantNo);
                     pl.PlantNo = plant.PlantNo;
-                    pl.Temperature = plant.Temperature;
-                    pl.Humidity = plant.Humidity;
-                    pl.SoilMoisture = plant.SoilMoisture;
-                    pl.Date = plant.Date;
+                    pl.Name = plant.Name;
+                    pl.Price = plant.Price;
+                    pl.Certificate = plant.Certificate;
 
                     Plants.Add(plant);
                 }
@@ -123,7 +98,7 @@ namespace PlantProject.ViewModels
                 return;
 
             // This will push the ItemDetailPage onto the navigation stack
-            //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.PlantId)}={Plant.Id}");
+            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.PlantNo)}={plant.PlantNo}");
         }
     }
 }

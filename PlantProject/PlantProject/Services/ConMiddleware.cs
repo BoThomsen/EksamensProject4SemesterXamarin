@@ -16,7 +16,7 @@ namespace PlantProject.Services
 
         public static HttpClient client;
 
-        public static async Task<HttpResponseMessage> GetPlants()
+        public static async Task<HttpResponseMessage> GetDatalogger()
         {
             try
             {
@@ -26,6 +26,29 @@ namespace PlantProject.Services
 
                 //getting httpresponse
                 HttpResponseMessage response = await client.GetAsync(serverUrl + "datalogger");
+                response.EnsureSuccessStatusCode();
+
+                Console.WriteLine(response);
+                return response;
+
+            }
+            catch (HttpRequestException)
+            {
+                return new HttpResponseMessage();
+            }
+        }
+
+
+        public static async Task<HttpResponseMessage> GetPlants()
+        {
+            try
+            {
+                // creating http client
+                client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //getting httpresponse
+                HttpResponseMessage response = await client.GetAsync(serverUrl + "plants");
                 response.EnsureSuccessStatusCode();
 
                 Console.WriteLine(response);

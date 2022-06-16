@@ -14,44 +14,53 @@
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
       https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
     -->
-    <RefreshView x:DataType="local:PlantsViewModel" Command="{Binding LoadPlantsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}" >
-        <CollectionView x:Name="ItemsListView"
+    <ContentPage.Content>
+        <RefreshView  Command="{Binding LoadPlantsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}" >
+        <ListView x:Name="ItemsListView"
                 ItemsSource="{Binding Plants}"
                 SelectionMode="None">
-            <CollectionView.ItemTemplate>
+            <ListView.ItemTemplate>
                 <DataTemplate>
+                        <ViewCell x:DataType="model:Plant" >
+                        <Grid>
 
-                    <StackLayout Padding="10" x:DataType="model:Plant">
-                        <Label Text="{Binding PlantNo}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+
+                                </Grid.ColumnDefinitions>
+
+                                <Label Text="{Binding PlantNo}"
+                            FontSize="16" 
+                             Grid.Column="0"
+                             Grid.Row="0"/>
+                               
+                                <Label Text="{Binding Name}" 
+                             Grid.Column="1"
                             FontSize="16" />
-                        <Label Text="{Binding Temperature}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
+                                <Label Text="{Binding Price}"
+                             Grid.Column="2"
                             FontSize="16" />
-                        <Label Text="{Binding Humidity}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
+                                <Label Text="{Binding Certificate}"
+                             Grid.Column="3"
                             FontSize="16" />
-                        <Label Text="{Binding SoilMoisture}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="16" />
-                        <Label Text="{Binding Date}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="16" />
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer 
+                                <StackLayout Padding="10" x:DataType="model:Plant">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:PlantsViewModel}}, Path=ItemTapped}"		
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:PlantsViewModel}}, Path=PlantTapped}"		
                                 CommandParameter="{Binding .}">
-                            </TapGestureRecognizer>
-                        </StackLayout.GestureRecognizers>
-                    </StackLayout>
+                                    </TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
                 </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            </ListView.ItemTemplate>
+        </ListView>
     </RefreshView>
+    </ContentPage.Content>
 </ContentPage>
